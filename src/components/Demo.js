@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import TextScroller, { SCROLL_INTERVAL, START_DELAY } from './components/TextScroller';
+import TextScroller, { SCROLL_INTERVAL, START_DELAY } from './TextScroller';
 import PropTypes from 'prop-types';
 import Timer from './Timer';
 import styles from './Demo.module.css';

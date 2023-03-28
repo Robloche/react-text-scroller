@@ -1,10 +1,14 @@
 {
   "name": "text-scroller",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "author": {
     "email": "robloche@gmail.com",
     "name": "Rodolphe Breton",
     "url": "https://github.com/Robloche/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Robloche/react-text-scroller.git"
   },
   "private": false,
   "dependencies": {
