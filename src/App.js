@@ -1,25 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import Demo from './Demo';
+import React from 'react';
+import styles from './App.module.css';
 
-function App() {
+const App = () => {
+  const dbg = { font: '14px sans-serif', height: '20px' };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className={styles.app}>
+      <Demo isFitting={true} style={dbg}>
+        A short text that fits
+      </Demo>
+      <Demo isFitting={false} style={{ font: '14px sans-serif', height: '20px' }}>
+        A very loooooong text that does not fit at all
+      </Demo>
+      <Demo isFitting={false} style={{ font: 'bold 15px sans-serif', height: '40px' }} delay={1000}>
+        A very loooooong text that does not fit at all
+      </Demo>
+      <Demo isFitting={false} style={{ font: '14px monospace', height: '20px' }} delay={1000}>
+        <span className={styles.red}>A very loooooong text</span> <span className={styles.green}>split into multiples nodes</span>
+      </Demo>
     </div>
   );
-}
+};
 
 export default App;

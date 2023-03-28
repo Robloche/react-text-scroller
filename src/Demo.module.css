@@ -1,0 +1,36 @@
+.demoWrapper {
+    background-color: rgb(52 149 229);
+    border-radius: .4rem;
+    column-gap: 2rem;
+    display: flex;
+    flex: 1 0 100%;
+    padding: 1rem;
+}
+
+.description {
+    display: grid;
+    grid-template-columns: 5rem auto;
+    margin-right: auto;
+    row-gap: .2rem;
+}
+
+.label {
+    font-weight: bold;
+}
+
+.code {
+    font-family: monospace;
+}
+
+.demo {
+    align-items: center;
+    background-color: var(--bg-color);
+    border-radius: .1rem;
+    color: #000;
+    display: flex;
+    font: 14px sans-serif;
+    height: 20px;
+    padding-inline: .1rem;
+    white-space: nowrap;
+    width: 200px;
+}
