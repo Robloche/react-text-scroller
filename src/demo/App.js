@@ -1,4 +1,4 @@
-import Demo from './components/Demo';
+import Demo from '../components/Demo';
 import React from 'react';
 import styles from './App.module.css';
 

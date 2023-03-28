@@ -1,6 +1,7 @@
 {
   "name": "text-scroller",
   "version": "1.0.0",
+  "main": "index.js",
   "author": {
     "email": "robloche@gmail.com",
     "name": "Rodolphe Breton",
@@ -11,11 +12,6 @@
     "url": "git@github.com:Robloche/react-text-scroller.git"
   },
   "private": false,
-  "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1"
-  },
   "scripts": {
     "start": "react-scripts start",
     "prebuild": "npm run lint",
@@ -28,6 +24,22 @@
       "react-app/jest"
     ]
   },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.36.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.2",
+    "prettier": "^2.8.7"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -39,12 +51,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "eslint": "^8.36.0",
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-react": "^7.32.2",
-    "prettier": "^2.8.7"
   }
 }
