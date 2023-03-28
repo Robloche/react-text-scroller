@@ -11,13 +11,16 @@ export const START_DELAY = 500;
 // Interval between 2 scroll steps (in ms)
 export const SCROLL_INTERVAL = 20;
 
-const TextScroller = ({ children, delay = START_DELAY, onAbort, onHover, onEnd, onStart, speed = SCROLL_INTERVAL, style }) => {
+const TextScroller = ({ children, delay = START_DELAY, infinite = false, onAbort, onEnd, onHover, onInitialized, onStart, speed = SCROLL_INTERVAL, style }) => {
   const [leftPct, setLeftPct] = useState(0);
   const [elementRect, elementRef] = useElementRect();
   const hoverTimerId = useRef(null);
   const scrollingIntervalId = useRef(null);
 
-  const { isTruncated, requiredWidth } = React.useMemo(() => {
+  const validatedDelay = React.useMemo(() => (delay >= 0 ? delay : 0), [delay]);
+  const validatedSpeed = React.useMemo(() => (speed >= 0 ? speed : 0), [speed]);
+
+  const { availableWidth, isTruncated, requiredWidth } = React.useMemo(() => {
     if (elementRect === null) {
       // Not ready
       return { isTruncated: false, requiredWidth: 1 };
@@ -25,9 +28,17 @@ const TextScroller = ({ children, delay = START_DELAY, onAbort, onHover, onEnd, 
 
     const { width } = elementRect;
     const text = getRecursiveChildText(children);
-    const textWidth = measureTextWidth(width, style, text);
-    return { isTruncated: textWidth > width, requiredWidth: textWidth };
+    const requiredWidth = measureTextWidth(width, style, text);
+    const isTruncated = requiredWidth > width;
+
+    return { availableWidth: width, isTruncated, requiredWidth };
   }, [children, elementRect, style]);
+
+  useEffect(() => {
+    if (typeof onInitialized === 'function') {
+      onInitialized(!isTruncated);
+    }
+  }, [isTruncated, onInitialized]);
 
   const translate = useCallback(() => {
     setLeftPct((currentLeftPct) => currentLeftPct - 1);
@@ -39,38 +50,44 @@ const TextScroller = ({ children, delay = START_DELAY, onAbort, onHover, onEnd, 
   }, [setLeftPct]);
 
   const startScrolling = useCallback(() => {
-    if (typeof onStart !== 'undefined') {
+    if (typeof onStart === 'function') {
       onStart();
     }
-    scrollingIntervalId.current = setInterval(translate, speed);
-  }, [translate]);
+    scrollingIntervalId.current = setInterval(translate, validatedSpeed);
+  }, [onStart, translate]);
 
   useEffect(() => {
     if (leftPct <= -requiredWidth) {
       // Animation finished
-      stopScrolling();
-      if (typeof onEnd !== 'undefined') {
-        onEnd();
+      if (infinite) {
+        // Reset
+        setLeftPct(availableWidth);
+      } else {
+        // Stop
+        stopScrolling();
+        if (typeof onEnd === 'function') {
+          onEnd();
+        }
       }
     }
-  }, [leftPct, requiredWidth, stopScrolling]);
+  }, [availableWidth, infinite, leftPct, onEnd, requiredWidth, stopScrolling]);
 
   const handleOnMouseEnter = useCallback(() => {
-    if (typeof onHover !== 'undefined') {
+    if (typeof onHover === 'function') {
       onHover();
     }
-    hoverTimerId.current = setTimeout(startScrolling, delay);
-  }, [startScrolling]);
+    hoverTimerId.current = setTimeout(startScrolling, validatedDelay);
+  }, [onHover, startScrolling]);
 
   const handleOnMouseLeave = useCallback(() => {
     if (hoverTimerId.current) {
       clearTimeout(hoverTimerId.current);
     }
     stopScrolling();
-    if (typeof onAbort !== 'undefined') {
+    if (typeof onAbort === 'function') {
       onAbort();
     }
-  }, [stopScrolling]);
+  }, [onAbort, stopScrolling]);
 
   return (
     <div className={styles.wrapper} onMouseEnter={handleOnMouseEnter} onMouseLeave={handleOnMouseLeave} ref={elementRef}>
@@ -82,9 +99,11 @@ const TextScroller = ({ children, delay = START_DELAY, onAbort, onHover, onEnd, 
 TextScroller.propTypes = {
   children: PropTypes.oneOfType([PropTypes.element, PropTypes.string, PropTypes.node]).isRequired,
   delay: PropTypes.number,
+  infinite: PropTypes.bool,
   onAbort: PropTypes.func,
   onEnd: PropTypes.func,
   onHover: PropTypes.func,
+  onInitialized: PropTypes.func,
   onStart: PropTypes.func,
   speed: PropTypes.number,
   style: PropTypes.objectOf(PropTypes.string.isRequired).isRequired,

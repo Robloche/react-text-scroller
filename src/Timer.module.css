@@ -1,3 +1,30 @@
-.timer {
+@keyframes fill-div {
+    0% {
+        transform: scaleY(0%);
+    }
 
+    100% {
+        transform: scaleY(100%);
+    }
+}
+
+.timerWrapper {
+    align-self: stretch;
+    background-color: rgb(255 255 255 / 20%);
+    width: 10px;
+}
+
+.timer {
+    /* Default TextScroller delay */
+    --duration: 500ms;
+
+    background-color: #FFF;
+    height: 100%;
+    transform: scaleY(0%);
+    transform-origin: bottom;
+    width: 100%;
+}
+
+.timer.animate {
+    animation: fill-div var(--duration) linear forwards;
 }

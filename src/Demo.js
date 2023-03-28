@@ -1,31 +1,29 @@
+import React, { useCallback, useState } from 'react';
 import TextScroller, { SCROLL_INTERVAL, START_DELAY } from './components/TextScroller';
 import PropTypes from 'prop-types';
-import React, { useCallback } from 'react';
+import Timer from './Timer';
 import styles from './Demo.module.css';
 
-const Demo = ({ children, delay = START_DELAY, isFitting, speed = SCROLL_INTERVAL, style }) => {
-  const styleStr = React.useMemo(
-    () =>
-      Object.entries(style)
-        .map(([key, value]) => `${key}: ${value}`)
-        .join(', '),
-    [style]
-  );
+const Demo = ({ children, className, delay = START_DELAY, infinite = false, speed = SCROLL_INTERVAL, style }) => {
+  const [isFitting, setIsFitting] = useState(true);
+  const [isTimerOn, setIsTimerOn] = useState(false);
 
   const handleOnAbort = useCallback(() => {
-    console.log('onAbort');
+    setIsTimerOn(false);
   }, []);
 
   const handleOnEnd = useCallback(() => {
-    console.log('onEnd');
+    setIsTimerOn(false);
   }, []);
 
   const handleOnHover = useCallback(() => {
-    console.log('onHover');
-  }, []);
+    if (!isFitting) {
+      setIsTimerOn(true);
+    }
+  }, [isFitting]);
 
-  const handleOnStart = useCallback(() => {
-    console.log('onStart');
+  const handleOnInitialized = useCallback((isFitting) => {
+    setIsFitting(isFitting);
   }, []);
 
   return (
@@ -33,19 +31,33 @@ const Demo = ({ children, delay = START_DELAY, isFitting, speed = SCROLL_INTERVA
       <div className={styles.description}>
         <span className={styles.label}>Text fits?</span>
         <span>
-          {isFitting ? 'yes' : 'no'} --&gt; scroll {isFitting ? 'disabled' : 'enabled'}
+          {isFitting ? 'yes' : 'no'} &rarr; {isFitting ? '❌' : '✅'} scroll
         </span>
         <span className={styles.label}>Style:</span>
-        <span className={styles.code}>
-          {`{`} {styleStr} {`}`}
-        </span>
+        <div className={`${styles.multiline} ${styles.columns2} ${styles.css}`}>
+          {Object.entries(style).map(([key, value]) => (
+            <React.Fragment key={key}>
+              <span>{key}:</span>
+              <span>{value}</span>
+            </React.Fragment>
+          ))}
+        </div>
         <span className={styles.label}>Props:</span>
-        <span>
-          delay: {delay}ms {delay === START_DELAY && '(default)'}, speed: {speed}ms {speed === SCROLL_INTERVAL && '(default)'}
-        </span>
+        <div className={`${styles.multiline} ${styles.columns3}`}>
+          <span>delay:</span>
+          <span className={styles.rightAligned}>{delay}ms</span>
+          <span>{delay === START_DELAY && <span className={styles.default}>(default)</span>}</span>
+          <span>speed:</span>
+          <span className={styles.rightAligned}>{speed}ms</span>
+          <span>{speed === SCROLL_INTERVAL && <span className={styles.default}>(default)</span>}</span>
+          <span>infinite:</span>
+          <span className={styles.rightAligned}>{infinite.toString()}</span>
+          <span>{!infinite && <span className={styles.default}>(default)</span>}</span>
+        </div>
       </div>
-      <div className={styles.demo}>
-        <TextScroller delay={delay} onAbort={handleOnAbort} onEnd={handleOnEnd} onHover={handleOnHover} onStart={handleOnStart} speed={speed} style={style}>
+      <Timer duration={delay} isOn={isTimerOn} />
+      <div className={`${styles.demo} ${className ?? ''}`}>
+        <TextScroller delay={delay} infinite={infinite} onAbort={handleOnAbort} onEnd={handleOnEnd} onHover={handleOnHover} onInitialized={handleOnInitialized} speed={speed} style={style}>
           <span style={style}>{children}</span>
         </TextScroller>
       </div>
@@ -55,8 +67,9 @@ const Demo = ({ children, delay = START_DELAY, isFitting, speed = SCROLL_INTERVA
 
 Demo.propTypes = {
   children: PropTypes.oneOfType([PropTypes.element, PropTypes.string, PropTypes.node]).isRequired,
+  className: PropTypes.string,
   delay: PropTypes.number,
-  isFitting: PropTypes.bool.isRequired,
+  infinite: PropTypes.bool,
   speed: PropTypes.number,
   style: PropTypes.objectOf(PropTypes.string.isRequired).isRequired,
 };

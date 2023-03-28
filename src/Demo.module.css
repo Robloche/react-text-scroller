@@ -1,5 +1,6 @@
 .demoWrapper {
-    background-color: rgb(52 149 229);
+    align-items: flex-start;
+    background-color: #5387B3;
     border-radius: .4rem;
     column-gap: 2rem;
     display: flex;
@@ -8,18 +9,41 @@
 }
 
 .description {
+    color: #FFF;
     display: grid;
-    grid-template-columns: 5rem auto;
+    font-family: monospace;
+    grid-template-columns: 7rem auto;
     margin-right: auto;
-    row-gap: .2rem;
+    row-gap: .4rem;
 }
 
 .label {
+    color: #003B6A;
     font-weight: bold;
+    text-transform: uppercase;
 }
 
-.code {
-    font-family: monospace;
+.multiline {
+    display: grid;
+    flex-direction: column;
+    position: relative;
+    grid-gap: .1rem .5rem;
+}
+
+.columns2 {
+    grid-template-columns: auto 12rem;
+}
+
+.columns3 {
+    grid-template-columns: 5rem 4rem 5rem;
+}
+
+.rightAligned {
+    text-align: right;
+}
+
+.default {
+    color: rgb(255 255 255 / 50%);
 }
 
 .demo {
@@ -29,8 +53,7 @@
     color: #000;
     display: flex;
     font: 14px sans-serif;
-    height: 20px;
-    padding-inline: .1rem;
+    padding: .2rem .1rem;
     white-space: nowrap;
     width: 200px;
 }

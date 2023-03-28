@@ -50,7 +50,7 @@ const measureTextWidth = (availableWidth, style, text = '') => {
 
   document.body?.appendChild(div);
   const width = div.offsetWidth;
-  document.body?.removeChild(div);
+  //document.body?.removeChild(div);
 
   return width;
 };
